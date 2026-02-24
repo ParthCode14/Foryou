@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For you 💌</title>
+
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+font-family:'Segoe UI',cursive;
+background: linear-gradient(-45deg,#ffd6e0,#ffe5ec,#e2f0ff,#f3d9fa);
+background-size:400% 400%;
+animation:gradient 10s ease infinite;
+overflow:hidden;
+}
+
+@keyframes gradient{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* Start Screen */
+#startScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(-45deg,#ffd6e0,#ffe5ec,#e2f0ff,#f3d9fa);
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:999;
+}
+
+#heartBtn{
+font-size:70px;
+cursor:pointer;
+animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.15);}
+100%{transform:scale(1);}
+}
+
+h1{
+font-size:30px;
+margin:10px;
+color:white;
+text-shadow:0 0 10px rgba(0,0,0,0.3);
+}
+
+#msg{
+font-size:22px;
+width:85%;
+min-height:120px;
+color:#2b2b2b;
+background:rgba(255,255,255,0.80);
+padding:15px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* floating hearts */
+.heart{
+position:absolute;
+font-size:20px;
+animation:float 6s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);opacity:1;}
+100%{transform:translateY(-10vh);opacity:0;}
+}
+
+.final{
+font-size:26px;
+padding:20px;
+color:#2b2b2b;
+background:rgba(255,255,255,0.90);
+border-radius:25px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* hidden message */
+#secret{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+color:#fff;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+font-size:28px;
+opacity:0;
+pointer-events:none;
+transition:opacity 2s;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TAP TO START -->
+<div id="startScreen">
+<div style="font-size:24px;color:#333;margin-bottom:20px;">
+Someone left you a message...
+</div>
+<div id="heartBtn" onclick="startExperience()">💖</div>
+<div style="margin-top:20px;color:#444;">Tap the heart</div>
+</div>
+
+<h1 id="mainTitle" style="display:none;">💌 Hey...</h1>
+<div id="msg" style="display:none;"></div>
+<div id="secret"></div>
+
+<audio id="bgMusic" loop>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+/* Voice engine */
+let voices=[];
+function loadVoices(){ voices=speechSynthesis.getVoices(); }
+speechSynthesis.onvoiceschanged=loadVoices;
+
+function speak(text){
+const speech=new SpeechSynthesisUtterance(text);
+const female=voices.find(v =>
+v.name.toLowerCase().includes("female") ||
+v.name.toLowerCase().includes("zira") ||
+v.name.toLowerCase().includes("samantha") ||
+v.name.toLowerCase().includes("google uk english female")
+);
+if(female) speech.voice=female;
+speech.rate=0.88;
+speech.pitch=1.15;
+speech.volume=1;
+speechSynthesis.cancel();
+speechSynthesis.speak(speech);
+}
+
+/* get private name */
+const urlParams=new URLSearchParams(window.location.search);
+const name=urlParams.get('n')||"you";
+
+/* messages */
+const messages=[
+name+"… I know today was tiring.",
+"But you handled everything again.",
+"You always do.",
+"Right now…",
+"Someone is thinking about you.",
+"And hoping you smile a little.",
+"You are not alone today."
+];
+
+let i=0,j=0,current='';
+
+/* typing + narration */
+function type(){
+if(i<messages.length){
+if(j<=messages[i].length){
+current=messages[i].substring(0,j++);
+document.getElementById("msg").innerHTML=current;
+
+if(j===messages[i].length){
+setTimeout(()=>speak(messages[i]),200);
+}
+
+setTimeout(type,45);
+}else{
+i++;j=0;
+setTimeout(type,1200);
+}
+}else{
+setTimeout(showFinal,1500);
+}
+}
+
+/* start after heart tap */
+function startExperience(){
+document.getElementById("startScreen").style.display="none";
+document.getElementById("mainTitle").style.display="block";
+document.getElementById("msg").style.display="block";
+
+document.getElementById("bgMusic").play();
+speechSynthesis.resume();
+
+type();
+}
+
+/* final message */
+function showFinal(){
+document.body.innerHTML=`
+<div class="final">
+❤️ I Miss You ❤️<br><br>
+No special day.<br>
+No special reason.<br><br>
+I just wanted to remind you...<br>
+you matter to me more than you think.
+<br><br>
+— From someone who cares 🌙
+</div>
+<div id="secret"></div>`;
+
+setTimeout(()=>{
+speak("I just wanted to remind you... you matter to me more than you think.");
+},1000);
+
+activateSecret();
+}
+
+/* floating hearts */
+function createHeart(){
+const h=document.createElement("div");
+h.className="heart";
+h.innerHTML="💖";
+h.style.left=Math.random()*100+"vw";
+h.style.animationDuration=(3+Math.random()*3)+"s";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),6000);
+}
+setInterval(createHeart,400);
+
+/* hidden long press message */
+function activateSecret(){
+let timer;
+document.addEventListener("touchstart",()=>{timer=setTimeout(showSecret,3000);});
+document.addEventListener("touchend",()=>{clearTimeout(timer);});
+document.addEventListener("mousedown",()=>{timer=setTimeout(showSecret,3000);});
+document.addEventListener("mouseup",()=>{clearTimeout(timer);});
+}
+
+function showSecret(){
+const secret=document.getElementById("secret");
+secret.style.opacity="1";
+secret.innerHTML=`
+<div>🌙</div>
+<div style="margin-top:20px">
+I love you, ${name}.
+</div>
+<div style="font-size:16px;margin-top:20px;opacity:.7">
+(You found the hidden message)
+</div>`;
+}
+
+</script>
+
+</body>
+</html>
