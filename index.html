@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +26,7 @@ overflow:hidden;
 100%{background-position:0% 50%;}
 }
 
-/* Start Screen */
+/* Start screen */
 #startScreen{
 position:fixed;
 top:0;
@@ -114,7 +115,7 @@ transition:opacity 2s;
 
 <body>
 
-<!-- TAP TO START -->
+<!-- Tap start -->
 <div id="startScreen">
 <div style="font-size:24px;color:#333;margin-bottom:20px;">
 Someone left you a message...
@@ -127,34 +128,9 @@ Someone left you a message...
 <div id="msg" style="display:none;"></div>
 <div id="secret"></div>
 
-<audio id="bgMusic" loop>
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3" type="audio/mpeg">
-</audio>
-
 <script>
 
-/* Voice engine */
-let voices=[];
-function loadVoices(){ voices=speechSynthesis.getVoices(); }
-speechSynthesis.onvoiceschanged=loadVoices;
-
-function speak(text){
-const speech=new SpeechSynthesisUtterance(text);
-const female=voices.find(v =>
-v.name.toLowerCase().includes("female") ||
-v.name.toLowerCase().includes("zira") ||
-v.name.toLowerCase().includes("samantha") ||
-v.name.toLowerCase().includes("google uk english female")
-);
-if(female) speech.voice=female;
-speech.rate=0.88;
-speech.pitch=1.15;
-speech.volume=1;
-speechSynthesis.cancel();
-speechSynthesis.speak(speech);
-}
-
-/* get private name */
+/* private name */
 const urlParams=new URLSearchParams(window.location.search);
 const name=urlParams.get('n')||"you";
 
@@ -171,17 +147,11 @@ name+"… I know today was tiring.",
 
 let i=0,j=0,current='';
 
-/* typing + narration */
 function type(){
 if(i<messages.length){
 if(j<=messages[i].length){
 current=messages[i].substring(0,j++);
 document.getElementById("msg").innerHTML=current;
-
-if(j===messages[i].length){
-setTimeout(()=>speak(messages[i]),200);
-}
-
 setTimeout(type,45);
 }else{
 i++;j=0;
@@ -197,10 +167,6 @@ function startExperience(){
 document.getElementById("startScreen").style.display="none";
 document.getElementById("mainTitle").style.display="block";
 document.getElementById("msg").style.display="block";
-
-document.getElementById("bgMusic").play();
-speechSynthesis.resume();
-
 type();
 }
 
@@ -218,10 +184,6 @@ you matter to me more than you think.
 </div>
 <div id="secret"></div>`;
 
-setTimeout(()=>{
-speak("I just wanted to remind you... you matter to me more than you think.");
-},1000);
-
 activateSecret();
 }
 
@@ -237,7 +199,7 @@ setTimeout(()=>h.remove(),6000);
 }
 setInterval(createHeart,400);
 
-/* hidden long press message */
+/* hidden long press */
 function activateSecret(){
 let timer;
 document.addEventListener("touchstart",()=>{timer=setTimeout(showSecret,3000);});
