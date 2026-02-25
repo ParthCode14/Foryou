@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Small Question 🙂</title>
+
+<!-- handwritten font -->
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background:#faf7f5;
+font-family:'Caveat',cursive;
+color:#222;
+overflow:hidden;
+}
+
+/* writing area */
+#board{
+width:90%;
+max-width:600px;
+font-size:42px;
+line-height:60px;
+}
+
+/* blinking cursor */
+.cursor{
+display:inline-block;
+width:2px;
+height:40px;
+background:#222;
+margin-left:5px;
+animation:blink 1s infinite;
+vertical-align:bottom;
+}
+
+@keyframes blink{
+0%,50%,100%{opacity:1;}
+25%,75%{opacity:0;}
+}
+
+/* countdown */
+#countdown{
+font-size:90px;
+margin-top:40px;
+opacity:0;
+transition:opacity .5s;
+}
+
+/* wrong message */
+#wrong{
+font-size:40px;
+margin-top:20px;
+opacity:0;
+transition:opacity 1s;
+}
+
+/* final message */
+#final{
+font-size:60px;
+margin-top:30px;
+color:#e63946;
+opacity:0;
+transform:scale(0.8);
+transition:all 1.2s ease;
+}
+
+#final.show{
+opacity:1;
+transform:scale(1.2);
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="board"></div>
+<div id="countdown"></div>
+<div id="wrong"></div>
+<div id="final"></div>
+
+<script>
+
+const name = new URLSearchParams(window.location.search).get('n') || "you";
+
+const lines = [
+"Answer the question",
+"100 + 55 = ??"
+];
+
+let lineIndex=0;
+let charIndex=0;
+const board=document.getElementById("board");
+
+/* handwriting effect */
+function writeLine(){
+if(lineIndex < lines.length){
+
+if(charIndex < lines[lineIndex].length){
+board.innerHTML += lines[lineIndex][charIndex];
+charIndex++;
+setTimeout(writeLine,60);
+}
+else{
+board.innerHTML += "<br>";
+lineIndex++;
+charIndex=0;
+setTimeout(writeLine,700);
+}
+
+}
+else{
+startCountdown();
+}
+}
+
+board.innerHTML='<span class="cursor"></span>';
+setTimeout(()=>{
+board.innerHTML='';
+writeLine();
+},600);
+
+/* countdown */
+function startCountdown(){
+const cd=document.getElementById("countdown");
+cd.style.opacity=1;
+
+let numbers=["3","2","1"];
+let i=0;
+
+function count(){
+if(i<numbers.length){
+cd.innerHTML=numbers[i];
+i++;
+setTimeout(count,900);
+}
+else{
+cd.style.opacity=0;
+showWrong();
+}
+}
+count();
+}
+
+/* wrong guess */
+function showWrong(){
+const wrong=document.getElementById("wrong");
+wrong.innerHTML="You guessed it incorrect.";
+wrong.style.opacity=1;
+
+setTimeout(showFinal,2000);
+}
+
+/* final reveal */
+function showFinal(){
+const final=document.getElementById("final");
+final.innerHTML="I MISS YOU ❤️";
+final.classList.add("show");
+}
+
+</script>
+
+</body>
+</html>
