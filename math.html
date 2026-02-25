@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Small Question 🙂</title>
 
-<!-- handwritten font -->
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
 
 <style>
@@ -20,9 +20,10 @@ background:#faf7f5;
 font-family:'Caveat',cursive;
 color:#222;
 overflow:hidden;
+text-align:center;
 }
 
-/* writing area */
+/* writing board */
 #board{
 width:90%;
 max-width:600px;
@@ -54,21 +55,30 @@ opacity:0;
 transition:opacity .5s;
 }
 
-/* wrong message */
+/* wrong text */
 #wrong{
-font-size:40px;
+font-size:38px;
 margin-top:20px;
+opacity:0;
+transition:opacity 1s;
+}
+
+/* explanation animation */
+#logic{
+font-size:50px;
+margin-top:25px;
+min-height:70px;
 opacity:0;
 transition:opacity 1s;
 }
 
 /* final message */
 #final{
-font-size:60px;
+font-size:64px;
 margin-top:30px;
 color:#e63946;
 opacity:0;
-transform:scale(0.8);
+transform:scale(0.7);
 transition:all 1.2s ease;
 }
 
@@ -85,6 +95,7 @@ transform:scale(1.2);
 <div id="board"></div>
 <div id="countdown"></div>
 <div id="wrong"></div>
+<div id="logic"></div>
 <div id="final"></div>
 
 <script>
@@ -100,7 +111,7 @@ let lineIndex=0;
 let charIndex=0;
 const board=document.getElementById("board");
 
-/* handwriting effect */
+/* handwriting typing */
 function writeLine(){
 if(lineIndex < lines.length){
 
@@ -150,16 +161,46 @@ showWrong();
 count();
 }
 
-/* wrong guess */
+/* incorrect guess */
 function showWrong(){
 const wrong=document.getElementById("wrong");
 wrong.innerHTML="You guessed it incorrect.";
 wrong.style.opacity=1;
 
-setTimeout(showFinal,2000);
+setTimeout(startLogic,2000);
 }
 
-/* final reveal */
+/* LOGIC REVEAL */
+function startLogic(){
+const logic=document.getElementById("logic");
+logic.style.opacity=1;
+
+const steps=[
+"100 + 55 = 155",
+"155 → 1 and 55",
+"1 = I",
+"55 = SS",
+"Add M in front",
+"M + I + SS",
+"MISS"
+];
+
+let i=0;
+
+function showStep(){
+if(i<steps.length){
+logic.innerHTML=steps[i];
+i++;
+setTimeout(showStep,1500);
+}
+else{
+showFinal();
+}
+}
+showStep();
+}
+
+/* final message */
 function showFinal(){
 const final=document.getElementById("final");
 final.innerHTML="I MISS YOU ❤️";
