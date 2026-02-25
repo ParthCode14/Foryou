@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspection Running...</title>
+
+<style>
+body{
+margin:0;
+height:100vh;
+background:#0b0f19;
+color:#00ffcc;
+font-family:monospace;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+overflow:hidden;
+}
+
+/* terminal text */
+#terminal{
+font-size:22px;
+text-align:left;
+width:90%;
+max-width:500px;
+min-height:200px;
+}
+
+/* blinking cursor */
+.cursor{
+display:inline-block;
+width:10px;
+background:#00ffcc;
+animation:blink 1s infinite;
+}
+
+@keyframes blink{
+0%,50%,100%{opacity:1;}
+25%,75%{opacity:0;}
+}
+
+/* scanning line */
+#scan{
+position:absolute;
+width:100%;
+height:3px;
+background:#00ffcc;
+top:-10px;
+box-shadow:0 0 20px #00ffcc;
+animation:scan 3s linear infinite;
+opacity:0;
+}
+
+@keyframes scan{
+0%{top:0%;}
+100%{top:100%;}
+}
+
+/* progress bar */
+#barBox{
+width:80%;
+max-width:400px;
+height:18px;
+border:2px solid #00ffcc;
+margin-top:20px;
+display:none;
+}
+
+#bar{
+height:100%;
+width:0%;
+background:#00ffcc;
+}
+
+/* result */
+#result{
+font-size:40px;
+margin-top:30px;
+opacity:0;
+text-align:center;
+color:#ffffff;
+}
+
+.approved{
+font-size:28px;
+margin-top:10px;
+color:#00ffcc;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="scan"></div>
+
+<div id="terminal"></div>
+
+<div id="barBox"><div id="bar"></div></div>
+
+<div id="result"></div>
+
+<script>
+
+const name = new URLSearchParams(window.location.search).get('n') || "User";
+
+const lines=[
+"Booting Cute Inspection System...",
+"Loading modules...",
+"Face detection started...",
+"Identifying subject: "+name,
+"Scanning smile...",
+"Scanning eyes...",
+"Analyzing personality...",
+"Measuring attitude...",
+"Calculating cuteness..."
+];
+
+let i=0;
+const terminal=document.getElementById("terminal");
+
+/* typewriter effect */
+function typeLine(){
+if(i<lines.length){
+let text=lines[i];
+let j=0;
+
+function typeChar(){
+if(j<text.length){
+terminal.innerHTML += text[j];
+j++;
+setTimeout(typeChar,25);
+}else{
+terminal.innerHTML+="<br>";
+i++;
+
+if(i===3) document.getElementById("scan").style.opacity=1;
+
+setTimeout(typeLine,500);
+}
+}
+typeChar();
+}
+else{
+startProgress();
+}
+}
+
+typeLine();
+
+/* progress bar */
+function startProgress(){
+document.getElementById("barBox").style.display="block";
+let width=0;
+const bar=document.getElementById("bar");
+
+const interval=setInterval(()=>{
+width++;
+bar.style.width=width+"%";
+if(width>=100){
+clearInterval(interval);
+showResult();
+}
+},40);
+}
+
+/* final result */
+function showResult(){
+document.getElementById("scan").style.opacity=0;
+
+const result=document.getElementById("result");
+result.style.opacity=1;
+
+result.innerHTML=
+"⭐ RESULT: 11/10<br>"+
+"<div class='approved'>CERTIFIED CUTE ✔<br>APPROVED 👍</div>";
+}
+
+</script>
+
+</body>
+</html>
