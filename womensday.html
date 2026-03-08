@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Women's Day</title>
+
+<style>
+
+body{
+margin:0;
+background:#020617;
+color:white;
+font-family:Georgia, serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+text-align:center;
+padding:30px;
+overflow:hidden;
+}
+
+/* main message */
+.message{
+max-width:700px;
+font-size:20px;
+line-height:32px;
+transition:opacity 2s ease;
+z-index:2;
+}
+
+/* final line */
+.final{
+position:absolute;
+font-size:36px;
+opacity:0;
+transition:opacity 2s ease;
+z-index:2;
+}
+
+/* flower petals */
+.petal{
+position:fixed;
+top:-20px;
+font-size:24px;
+animation:fall linear forwards;
+}
+
+@keyframes fall{
+0%{
+transform:translateY(-10px) rotate(0deg);
+opacity:1;
+}
+100%{
+transform:translateY(110vh) rotate(360deg);
+opacity:0;
+}
+}
+
+/* glowing particles */
+.sparkle{
+position:fixed;
+width:4px;
+height:4px;
+background:white;
+border-radius:50%;
+opacity:.6;
+animation:twinkle 4s infinite ease-in-out;
+}
+
+@keyframes twinkle{
+0%,100%{opacity:.2;}
+50%{opacity:1;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="msg" class="message">
+
+<b>She’s beautiful. ❤️</b><br><br>
+
+Not just in the way she looks, but in the way she moves through life, in the way she cares, and in the quiet strength she carries within her.
+
+<br><br>
+
+There are battles she has fought that the world may never know about. Moments when things were difficult, when life felt heavy, yet she still chose to keep going. That kind of strength doesn’t always make noise, but it’s there in her resilience, in her patience, and in the way she continues to stand tall through it all.
+
+<br><br>
+
+What makes her truly special isn’t perfection. It’s the way she brings warmth into a room without even trying. The way her smile can lift someone’s mood, the way her kindness makes people feel understood, and the way her presence makes the world feel a little softer.
+
+<br><br>
+
+Sometimes she may not realize how much she means to the people around her. She may not see how her courage, her compassion, and her heart quietly make a difference every single day.
+
+<br><br>
+
+But the truth is, the world feels a little brighter simply because she is in it.
+
+<br><br>
+
+And today is just a reminder of that.
+
+<br><br>
+
+<b>Happy Women’s Day. 🌸</b>
+
+</div>
+
+<div id="finalText" class="final">
+Thank you for your existence. 🌸
+</div>
+
+<script>
+
+/* create sparkle background */
+for(let i=0;i<70;i++){
+
+let star=document.createElement("div");
+star.classList.add("sparkle");
+
+star.style.left=Math.random()*100+"vw";
+star.style.top=Math.random()*100+"vh";
+
+star.style.animationDuration=(2+Math.random()*4)+"s";
+
+document.body.appendChild(star);
+
+}
+
+
+/* fade message after reading time */
+setTimeout(function(){
+
+document.getElementById("msg").style.opacity="0";
+
+setTimeout(function(){
+
+document.getElementById("finalText").style.opacity="1";
+startFlowers();
+
+},2000);
+
+},16000);
+
+
+/* falling flower animation */
+function startFlowers(){
+
+setInterval(function(){
+
+let petal=document.createElement("div");
+petal.classList.add("petal");
+petal.innerHTML="🌸";
+
+petal.style.left=Math.random()*100+"vw";
+petal.style.animationDuration=(6+Math.random()*4)+"s";
+
+document.body.appendChild(petal);
+
+setTimeout(()=>{
+petal.remove();
+},9000);
+
+},350);
+
+}
+
+</script>
+
+</body>
+</html>
