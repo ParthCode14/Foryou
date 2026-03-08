@@ -11,34 +11,29 @@ margin:0;
 background:#020617;
 color:white;
 font-family:Georgia, serif;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
 text-align:center;
-padding:30px;
-overflow:hidden;
+padding:40px 20px;
+overflow-x:hidden;
 }
 
-/* main message */
+/* message container */
 .message{
-max-width:700px;
+max-width:750px;
+margin:auto;
 font-size:20px;
 line-height:32px;
 transition:opacity 2s ease;
-z-index:2;
 }
 
 /* final line */
 .final{
-position:absolute;
 font-size:36px;
 opacity:0;
+margin-top:60px;
 transition:opacity 2s ease;
-z-index:2;
 }
 
-/* flower petals */
+/* petals */
 .petal{
 position:fixed;
 top:-20px;
@@ -57,7 +52,7 @@ opacity:0;
 }
 }
 
-/* glowing particles */
+/* sparkles */
 .sparkle{
 position:fixed;
 width:4px;
@@ -116,7 +111,7 @@ Thank you for your existence. 🌸
 
 <script>
 
-/* create sparkle background */
+/* sparkle background */
 for(let i=0;i<70;i++){
 
 let star=document.createElement("div");
@@ -131,8 +126,17 @@ document.body.appendChild(star);
 
 }
 
+let triggered=false;
 
-/* fade message after reading time */
+/* detect scroll end */
+window.addEventListener("scroll",function(){
+
+if(triggered) return;
+
+if((window.innerHeight + window.scrollY) >= document.body.offsetHeight-5){
+
+triggered=true;
+
 setTimeout(function(){
 
 document.getElementById("msg").style.opacity="0";
@@ -144,10 +148,15 @@ startFlowers();
 
 },2000);
 
-},16000);
+},10000);
+
+}
+
+});
 
 
-/* falling flower animation */
+/* falling flowers */
+
 function startFlowers(){
 
 setInterval(function(){
