@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 🎂</title>
+
+<style>
+
+body{
+margin:0;
+background:linear-gradient(135deg,#1e293b,#020617);
+color:white;
+font-family:Georgia, serif;
+text-align:center;
+overflow:hidden;
+}
+
+/* container */
+#container{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:90%;
+max-width:700px;
+}
+
+/* message lines */
+.line{
+font-size:22px;
+opacity:0;
+margin:12px 0;
+animation:fade 2s forwards;
+}
+
+@keyframes fade{
+to{opacity:1;}
+}
+
+/* sparkles */
+.sparkle{
+position:fixed;
+width:4px;
+height:4px;
+background:white;
+border-radius:50%;
+animation:twinkle 3s infinite;
+}
+
+@keyframes twinkle{
+0%,100%{opacity:.2;}
+50%{opacity:1;}
+}
+
+/* balloons */
+.balloon{
+position:fixed;
+bottom:-100px;
+font-size:30px;
+animation:rise 8s linear infinite;
+}
+
+@keyframes rise{
+0%{transform:translateY(0);}
+100%{transform:translateY(-120vh);}
+}
+
+/* final screen */
+#final{
+display:none;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+
+/* cake */
+.cake{
+font-size:80px;
+cursor:pointer;
+}
+
+/* candle flame */
+.flame{
+position:absolute;
+top:-20px;
+left:50%;
+transform:translateX(-50%);
+font-size:20px;
+}
+
+/* hidden message */
+#wish{
+opacity:0;
+font-size:22px;
+margin-top:20px;
+transition:opacity 2s;
+}
+
+/* confetti */
+.confetti{
+position:fixed;
+top:-10px;
+font-size:20px;
+animation:fall linear forwards;
+}
+
+@keyframes fall{
+to{
+transform:translateY(110vh) rotate(360deg);
+opacity:0;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="container"></div>
+
+<div id="final">
+<h1 id="nameTitle"></h1>
+
+<div style="position:relative; display:inline-block;">
+<div class="cake" onclick="blowCandle()">🎂</div>
+<div id="flame" class="flame">🔥</div>
+</div>
+
+<p>Tap the cake to blow the candle 🕯️</p>
+
+<div id="wish">
+🎉 Wish fulfilled! May all your dreams come true ❤️
+</div>
+
+</div>
+
+<script>
+
+/* get name */
+const name = new URLSearchParams(window.location.search).get('n') || "You";
+
+/* set name */
+document.getElementById("nameTitle").innerHTML = "Happy Birthday " + name + " 🎉";
+
+/* sparkles */
+for(let i=0;i<80;i++){
+let s=document.createElement("div");
+s.className="sparkle";
+s.style.left=Math.random()*100+"vw";
+s.style.top=Math.random()*100+"vh";
+document.body.appendChild(s);
+}
+
+/* message */
+const lines=[
+"Hey…",
+"Today is not just another day.",
+"It’s the day someone really special was born.",
+"Someone who makes life brighter.",
+"Someone who brings smiles without trying.",
+"You may not always realize it…",
+"but you are truly important.",
+"More than you think.",
+"And today…",
+"I just hope you smile a little extra.",
+"Because you deserve it ❤️"
+];
+
+let i=0;
+const container=document.getElementById("container");
+
+function showLine(){
+if(i<lines.length){
+let div=document.createElement("div");
+div.className="line";
+div.innerHTML=lines[i];
+container.appendChild(div);
+i++;
+setTimeout(showLine,1800);
+}else{
+setTimeout(showFinal,3000);
+}
+}
+
+showLine();
+
+/* balloons */
+setInterval(()=>{
+let b=document.createElement("div");
+b.className="balloon";
+b.innerHTML="🎈";
+b.style.left=Math.random()*100+"vw";
+b.style.animationDuration=(6+Math.random()*4)+"s";
+document.body.appendChild(b);
+setTimeout(()=>b.remove(),8000);
+},600);
+
+/* show final */
+function showFinal(){
+container.style.display="none";
+document.getElementById("final").style.display="block";
+}
+
+/* blow candle */
+function blowCandle(){
+document.getElementById("flame").style.display="none";
+document.getElementById("wish").style.opacity="1";
+startConfetti();
+}
+
+/* confetti */
+function startConfetti(){
+setInterval(()=>{
+let c=document.createElement("div");
+c.className="confetti";
+c.innerHTML="🎉";
+c.style.left=Math.random()*100+"vw";
+c.style.animationDuration=(3+Math.random()*3)+"s";
+document.body.appendChild(c);
+setTimeout(()=>c.remove(),5000);
+},200);
+}
+
+</script>
+
+</body>
+</html>
